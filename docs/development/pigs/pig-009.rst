@@ -3,7 +3,7 @@
 .. _pig-009:
 
 ***********************
-PIG 9 - Event simulator
+PIG 9 - Event Sampler
 ***********************
 
 * Author: Fabio Pintore, Andrea Giuliani, Axel Donath
@@ -12,19 +12,12 @@ PIG 9 - Event simulator
 * Status: 
 * Discussion:  
 
-Introduction
+Abstract
 ============
 
-An event simulator of gamma events is of high importance in exploiting the potentiality of the future Cherenkov Telescope
+An event sampler of gamma events is of high importance in exploiting the potentiality of the future Cherenkov Telescope
 Array (CTA). It will allows us to simulate sources with different spectral and morphological properties adn e.g. investigating
-the best configurations for each type of objects and the expected performance of CTA on this data. An event simulator is also listed
-as a requirement for the future CTA Science Tools. For this reason, we propose to implement a framework for event simulation
-in Gammapy. Based on finely binned input maps, containing the predicted number of counts for a given source with a defined
-morphological and spectral model, it samples events using the inverse cumulative distribution (Inverse CDF). In addition
-a light curve model can be taken into account. Then the proposed simulator will be able to apply the PSF and energy dispersion
-to each sampled event. Furthermore, the sampler will include the simulation of background events, again based on finely
-binned maps. The final output of the simulator is a stacked event list with source and background events for a given
-observation.
+the best configurations for each type of objects and the expected performance of CTA on this data. An event sampler is also listed as a requirement for the future CTA Science Tools. For this reason, we propose to implement a framework for event simulation in Gammapy. Based on finely binned input maps, containing the predicted number of counts for a given source with a defined morphological and spectral model, it samples events using the inverse cumulative distribution (Inverse CDF). In addition a light curve model can be taken into account. Then the proposed event sampler will be able to apply the PSF and energy dispersion to each sampled event. Furthermore, the sampler will include the simulation of background events, again based on finely binned maps. The final output of the sampler is a stacked event list with source and background events for a given observation.
 
 
 A working prototype of the event sample can be found at this URL: https://github.com/fabiopintore/notebooks-public/blob/master/gammapy-event-sampling/prototype.ipynb
@@ -32,12 +25,12 @@ A working prototype of the event sample can be found at this URL: https://github
 Proposal
 ========
 
-We propose to introduce the following classes to implement the event simulation framework in Gammapy.
+We propose to introduce the following classes to implement the event sampler framework in Gammapy.
 
 InverseCDFSampler
 =================
 
-The first building block of the event simulator is a class that samples from a given probability function (PSF). For this
+The first building block of the event sampler is a class that samples from a given probability function (PSF). For this
 we use the inverse CDF sampling method (https://en.wikipedia.org/wiki/Inverse_transform_sampling). In more detail, it
 calculates the cumulative distribution function and, once a set of random numbers is determined, it samples a set of events.
 The proposed implementation follows closely what is described here https://stackoverflow.com/questions/21100716/fast-arbitrary-distribution-random-sampling/21101584#21101584:
