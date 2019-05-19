@@ -44,9 +44,7 @@ InverseCDFSampler
 
 The first building block of the event sampler is a class that samples from a given 
 probability function (PSF). For this we use the inverse CDF sampling method (inverseCDF_). 
-In more detail, it calculates the cumulative distribution function and, once a set of 
-random numbers is determined, it samples a set of events. The proposed implementation 
-follows closely what is described here_:
+The proposed implementation follows closely what is described here_:
 
 The basic design of the class is as following:
 
@@ -149,10 +147,10 @@ level, by a loop over good time-intervals. The class would be used as following:
 .. code::
 
     events = vstack([events_src_1, events_src_2, ..., events_src_N])
-    irf_sampler = IRFMapSampler(psf_map, edisp_map)
+    irf_distributor = IRFEventDistibutor(psf_map, edisp_map)
 
-    events = irf_sampler.sample_psf(events)
-    events = irf_sampler.sample_edisp(events)
+    events = irf_distributor.sample_psf(events)
+    events = irf_distributor.sample_edisp(events)
 
 Alternatively the IRFs could be applied per model component and be handled in 
 the `MapEventSampler`. However in this case the IRFs would not be applied 
@@ -252,9 +250,12 @@ current `gammapy.utils.random` there (v0.12).
 and add tests.
 4. Remove the current `GeneralRandom` class and adapt `gammapy.astro.population.simulate` 
 accordingly.
-5. Implement `MapEventSampler` class ... (v0.13, v0.14)?
-6. Implement IRFSampler into gammapy. ... (v0.13, v0.14)?
-7. Implement MapDatasetEventSampler into gammapy. ... (v0.13, v0.14)?
+5. Implement `MapEventSampler` class into `gammapy.utils.?' and named it 
+`map_evesampler.py' and include some tests. (v0.13, v0.14)?
+6. Write a tutorial on how to use the event sampler.
+7. Implement `IRFEventDistibutor' into `gammapy.cube' with the name `event_distributor.py'
+and add some tests. (v0.13, v0.14)?
+8. Implement `MapDatasetEventSampler' into `gammapy.data'(?) and add some tests. (v0.13, v0.14)?
 
 Decision
 ========
