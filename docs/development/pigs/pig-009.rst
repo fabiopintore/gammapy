@@ -208,6 +208,8 @@ More detailed:
 
 Convenience API
 ===============
+---ADD a few more words about the possibility that the users do not to import a IRF
+class but they can directly use the `MapEventSampler'.---
 Additional methods to the `MapEventSampler' can be included to take into account
 the PSF and Edisp corrections. This may be done as follows:
 
@@ -244,20 +246,22 @@ List of proposed pull requests
 This is a proposal for a list of pull requests implementing the proposed changes, 
 ordered by priority:
 
-1. Rename `gammapy.utils.distributions` to `gammapy.utils.random` and move the 
-current `gammapy.utils.random` there (v0.12).
+1. Rename `gammapy.utils.distributions' to `gammapy.utils.random' and move the 
+   current `gammapy.utils.random' there (v0.12).
 2. Remove the currently unused `GeneralRandomArray` class (v0.12)
-3. Implement the InverseCDFSampler in `gammapy.utils.random` in `inverse_cdf.py` 
-and add tests.
-4. Remove the current `GeneralRandom` class and adapt `gammapy.astro.population.simulate` 
-accordingly.
+3. Implement the InverseCDFSampler in `gammapy.utils.random' in `inverse_cdf.py' 
+   and add tests.
+4. Remove the current `GeneralRandom` class and adapt `gammapy.astro.population.simulate' 
+   accordingly.
 5. Implement `MapEventSampler` class into `gammapy.utils.?' and named it 
-`map_evesampler.py' and include some tests. (v0.13, v0.14)?
+   `map_evesampler.py' and include some tests. (v0.13, v0.14)?
 6. Add tutorial on how to use the `MapEventSampler' applying it to both sources and background.
 7. Implement `IRFEventDistibutor' into `gammapy.cube' with the name `event_distributor.py'
-and add some tests. (v0.13, v0.14)?
+   and add some tests. (v0.13, v0.14)?
 8. Implement `MapDatasetEventSampler' into `gammapy.data'(?) and add some tests. (v0.13, v0.14)?
 9. Add tutorial for event simulations of different kinds of sources. (v0.13, v0.14)?
+
+
 Decision
 ========
 
