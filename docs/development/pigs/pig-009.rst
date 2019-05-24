@@ -127,24 +127,9 @@ background models:
     events_bkg = bkg_sample.sample()
 
 
-Additional methods to the `MapEventSampler' can be included to take into account
-the PSF and Edisp correction. This may be done as follows:
-
-- `events_src = MapEvaluator.sample()` to sample from a source model
-- `events = EdispMap.sample(events=)` to apply the energy dispersion
-- `events = PsfMap.sample(events=)` to apply the PSF
-- `events = MapDataset.sample()` to combine all together.
-
-This has the advantage of a smaller API but, for more than one simulated source,
-it needs the use a cycles.
-
-It remains to answer the question what to do when the source lightcurve is 
-shorter than the total exposure time: do we repeat the temporal information 
-or do we just consider the remaining time as a flat lightcurve?
-
 
 IRFEventDistibutor
-=============
+=================
 
 We also propose a class to handle correctly the spatially varying IRFs, we suggest
 to introduce an `IRFEventDistibutor` class. Based on the `PSFMap` and `EDispMap` 
@@ -158,7 +143,7 @@ over good time-intervals. The class would be used as following:
 .. code::
 
     events = vstack([events_src_1, events_src_2, ..., events_src_N])
-    irf_distributor = IRFEventDistibutor(psf_map, edisp_map)
+    event_distributor = IRFEventDistibutor(psf_map, edisp_map)
 
     events = irf_distributor.sample_psf(events)
     events = irf_distributor.sample_edisp(events)
@@ -219,6 +204,24 @@ More detailed:
     events_bkg = bkg_sampler.sample()
 
     events_total = vstack([events_reco, event_bkg])
+
+
+Convenience API
+===============
+Additional methods to the `MapEventSampler' can be included to take into account
+the PSF and Edisp corrections. This may be done as follows:
+
+- `events_src = MapEvaluator.sample()` to sample from a source model
+- `events = EdispMapDistributor.sample(events=)` to apply the energy dispersion
+- `events = PsfMapDistributor.sample(events=)` to apply the PSF
+- `events = MapDataset.sample()` to combine all together.
+
+This has the advantage of a smaller API but, for more than one simulated source,
+it needs the use a cycles.
+
+It remains to answer the question what to do when the source lightcurve is 
+shorter than the total exposure time: do we repeat the temporal information 
+or do we just consider the remaining time as a flat lightcurve?
 
 
 Simulating multiple observations
