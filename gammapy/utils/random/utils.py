@@ -4,8 +4,6 @@ import numbers
 import numpy as np
 from astropy.coordinates import Angle
 from scipy.integrate import quad
-from ...utils.random import get_random_state
-from ...utils.distributions import GeneralRandom
 
 
 __all__ = [
@@ -49,6 +47,8 @@ def density(func):
 
 def draw(low, high, size, dist, random_state="random-seed", *args, **kwargs):
     """Allows drawing of random numbers from any distribution."""
+    from .general_random import GeneralRandom
+
     random_state = get_random_state(random_state)
 
     def f(x):
