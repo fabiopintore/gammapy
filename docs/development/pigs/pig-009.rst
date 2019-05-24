@@ -250,11 +250,11 @@ and add tests.
 accordingly.
 5. Implement `MapEventSampler` class into `gammapy.utils.?' and named it 
 `map_evesampler.py' and include some tests. (v0.13, v0.14)?
-6. Write a tutorial on how to use the event sampler.
+6. Add tutorial on how to use the `MapEventSampler' applying it to both sources and background.
 7. Implement `IRFEventDistibutor' into `gammapy.cube' with the name `event_distributor.py'
 and add some tests. (v0.13, v0.14)?
 8. Implement `MapDatasetEventSampler' into `gammapy.data'(?) and add some tests. (v0.13, v0.14)?
-
+9. Add tutorial for event simulations of different kinds of sources. (v0.13, v0.14)?
 Decision
 ========
 
