@@ -127,6 +127,17 @@ background models:
     events_bkg = bkg_sample.sample()
 
 
+Additional methods to the `MapEventSampler' can be included to take into account
+the PSF and Edisp correction. This may be done as follows:
+
+- `events_src = MapEvaluator.sample()` to sample from a source model
+- `events = EdispMap.sample(events=)` to apply the energy dispersion
+- `events = PsfMap.sample(events=)` to apply the PSF
+- `events = MapDataset.sample()` to combine all together.
+
+This has the advantage of a smaller API but, for more than one simulated source,
+it needs the use a cycles.
+
 It remains to answer the question what to do when the source lightcurve is 
 shorter than the total exposure time: do we repeat the temporal information 
 or do we just consider the remaining time as a flat lightcurve?
@@ -135,14 +146,14 @@ or do we just consider the remaining time as a flat lightcurve?
 IRFEventDistibutor
 =============
 
-To handle correctly the spatially varying IRFs, we propose to introduce an 
-`IRFEventDistibutor` class. Based on the `PSFMap` and `EDispMap` as an input 
-it interpolates the "correct" IRF at the position of a given event and applies 
-it. In more detail the class will calculate the psf and the energy dispersion 
+We also propose a class to handle correctly the spatially varying IRFs, we suggest
+to introduce an `IRFEventDistibutor` class. Based on the `PSFMap` and `EDispMap` 
+as an input it interpolates the "correct" IRF at the position of a given event and
+applies it. In more detail the class will calculate the psf and the energy dispersion 
 for each event true position and true energy. The reconstructed energies and 
-positions are then appended to the event list. The IRFs are assumed to be 
-constant and not time-dependent. The time dependency will be handled higher 
-level, by a loop over good time-intervals. The class would be used as following:
+positions are then appended to the event list. The IRFs are assumed to be constant
+and not time-dependent. The time dependency will be handled higher level, by a loop
+over good time-intervals. The class would be used as following:
 
 .. code::
 
@@ -158,6 +169,7 @@ correctly for e.g. very extended sources, because the IRF changes over region
 of the source. If we find the approach with the `IRFEventDistibutor` to be not 
 performant enough or problematic in memory use, it can be still used as a 
 simple fallback solution.
+
 
 MapDatasetEventSampler
 =======================
@@ -214,20 +226,6 @@ Simulating multiple observations
 The question of simulating mutiple observations from e.g. an `ObservationTable` 
 or `GTI` object as it is needed for simulating data for the CTA data challenge 
 is not addressed in this PIG.
-
-
-
-Alternatives
-============
-Instead of introducing a parallel class structure of sampler objects once could 
-introduce `.sample()` methods on the existing related classes in Gammapy:
-
-- `events_src = MapEvaluator.sample()` to sample from a source model
-- `events = EdispMap.sample(events=)` to apply the energy dispersion
-- `events = PsfMap.sample(events=)` to apply the PSF
-- `events = MapDataset.sample()` to combine all together.
-
-This has the advantage of a smaller API, but is less flexible.
 
 
 Binned Simulation
