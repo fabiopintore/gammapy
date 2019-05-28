@@ -1,5 +1,4 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Helper functions to work with distributions."""
 import numpy as np
 from .utils import get_random_state
 
@@ -18,7 +17,8 @@ from .utils import get_random_state
 
 class InverseCDFSampler:
     """Inverse CDF sampler.
-        
+       Determines a set of random numbers and calculate the cumulative distribution function.
+       
         Parameters
         ----------
         pdf : `~`gammapy.maps.Map`
@@ -26,7 +26,6 @@ class InverseCDFSampler:
         
         """
     def __init__(self, pdf, axis=None, random_state=0):
-        """Determines a set of random numbers and calculate the cumulative distribution function"""
         self.random_state = get_random_state(random_state)
         self.axis = axis
         
