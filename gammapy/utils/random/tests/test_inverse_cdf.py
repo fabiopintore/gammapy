@@ -7,7 +7,7 @@ import numpy as np
 def ct_rate(x):
     return np.exp(-x/20)
 
-def random_light_curve:
+def random_light_curve():
     x = np.linspace(0,100,100)
     table = Table()
     table['time'] = x
