@@ -4,14 +4,14 @@ from gammapy.time.models import LightCurveTableModel
 import numpy as np
 
 
-def rate(x):
+def ct_rate(x):
     return np.exp(-x/20)
 
 def random_light_curve:
     x = np.linspace(0,100,100)
     table = Table()
     table['time'] = x
-    table['rate'] = rate(x)
+    table['rate'] = ct_rate(x)
     lc = LightCurveTableModel(table)
 
     t_data = lc.table['time'].data

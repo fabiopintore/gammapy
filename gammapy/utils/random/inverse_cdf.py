@@ -17,7 +17,7 @@ from .utils import get_random_state
 
 class InverseCDFSampler:
     """Inverse CDF sampler.
-       Determines a set of random numbers and calculate the cumulative distribution function.
+       It determines a set of random numbers and calculate the cumulative distribution function.
        
         Parameters
         ----------
