@@ -1,5 +1,6 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 from astropy.table import Table
+from ..inverse_cdf import InverseCDFSampler
 from gammapy.time.models import LightCurveTableModel
 import numpy as np
 

@@ -47,15 +47,21 @@ def density(func):
 
 def draw(low, high, size, dist, random_state="random-seed", *args, **kwargs):
     """Allows drawing of random numbers from any distribution."""
-    from .general_random import GeneralRandom
+#    from .general_random import GeneralRandom
+    from .inverse_cdf import InverseCDFSampler
 
     random_state = get_random_state(random_state)
-
     def f(x):
         return dist(x, *args, **kwargs)
 
-    d = GeneralRandom(f, low, high)
-    return d.draw(size, random_state=random_state)
+#    d = GeneralRandom(f, low, high)
+#    return d.draw(size, random_state=random_state)
+
+    ran_res = 1000
+    x = np.linspace(low, high, ran_res)
+    pdf = f(x)
+    d = InverseCDFSampler(pdf.amplitude[0], random_state=random_state)
+    return d.sample(size)
 
 
 def get_random_state(init):
