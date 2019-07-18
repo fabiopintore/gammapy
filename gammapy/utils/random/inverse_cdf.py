@@ -203,3 +203,73 @@ class MapEventSampler:
         events["TIME"] = self.sample_timepred * u.s
 
         return events
+
+
+class IRFEventDistributor:
+    """Map event sampler.
+
+    Parameters
+    ----------
+    events : `~astropy.table`.
+        List containing coordinates, energies and times of the events.
+    psf_map : `~gammapy.cube.make_psf_map`.
+        Psf map.
+    edisp_map : `~gammapy.cube.make_edisp_map`.
+        Energy dispersion.
+    random_state : {int, 'random-seed', 'global-rng', `~numpy.random.RandomState`}
+        Defines random number generator initialisation.
+        Passed to `~gammapy.utils.random.get_random_state`.
+    """
+
+    def __init__(self, events, psf_map=None, edisp_map=None,
+                 random_state=0):
+        self.random_state = get_random_state(random_state)
+        self.events = events
+        self.psf_map = psf_map
+        self.edisp_map = edisp_map
+
+    def sample_psf(self):
+        """ Apply PSF corrections on the event coordinates.
+
+        Returns
+        -------
+        events : `~astropy.table`
+        Reconstructed event positions.
+        """
+
+        sample_pdf = InverseCDFSampler(self.psf_map, axis=1)
+        pix_coord = sample_pdf.sample_axis()
+        offset = theta_axis.pix_to_coord(pix_coord)
+
+        phi_angle = self.random_state.uniform(360, size=len(self.events)) * u.deg
+        event_positions = SkyCoord(self.events['RA_TRUE'], self.events['DEC_TRUE'], frame='icrs', unit='deg')
+        event_positions = event_positions.directional_offset_by(phi_angle, offset * u.deg)
+
+        events_rec = Table()
+        events_rec["RA"] = event_positions.ra * u.deg
+        events_rec["DEC"] = event_positions.dec * u.deg
+        events_rec["ENERGY_TRUE"] = self.events["ENERGY_TRUE"]
+        events_rec["TIME"] = self.events["TIME"]
+
+        return events_rec
+
+    def sample_edisp(self):
+        """ Apply the energy dispersion to the event energy.
+
+        Returns
+        -------
+        events : `~astropy.table`
+        Reconstructed event energies.
+        """
+
+        sample_pdf_edisp = InverseCDFSampler(self.edisp_map, axis=1)
+        pix_coord_edisp = sample_pdf_edisp.sample_axis()
+        e_corr = migra_axis.pix_to_coord(pix_coord_edisp)
+
+        events_rec = Table()
+        events_rec["RA"] = self.events["RA"]
+        events_rec["DEC"] = self.events["DEC"]
+        events_rec["ENERGY"] = self.events["ENERGY_TRUE"] * e_corr
+        events_rec["TIME"] = self.events["TIME"]
+        
+        return events_rec
