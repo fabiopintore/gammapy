@@ -693,67 +693,64 @@ class WcsNDMap(WcsMap):
 
         return self._init_copy(geom=geom, data=data)
 
-    def sample_position_energy(self, npred_map=None, n_events=None, random_state=0):
+    def sample_coord(self, n_events=None, random_state=0):
         """Sample position and energy of events.
-
+        
         Parameters
         ----------
-        npred_map : `~gammapy.maps.Map`
-            Predicted number of counts map.
         n_events : int
-            Number of events to sample.
+        Number of events to sample.
         random_state : {int, 'random-seed', 'global-rng', `~numpy.random.RandomState`}
-            Defines random number generator initialisation.
-            Passed to `~gammapy.utils.random.get_random_state`.
-
+        Defines random number generator initialisation.
+        Passed to `~gammapy.utils.random.get_random_state`.
+        
         Returns
         -------
         coords : `~gammapy.maps.MapCoord` object.
-            Sequence of coordinates and energies of the sampled events.
+        Sequence of coordinates and energies of the sampled events.
         """
 
-        self.random_state = get_random_state(random_state)
-        self.npred_map = npred_map
-        self.n_events = n_events
-
-        sampler = InverseCDFSampler(self.npred_map.data, random_state=self.random_state)
+        random_state = get_random_state(random_state)
+        sampler = InverseCDFSampler(pdf=self.data, random_state=random_state)
 
         coords_pix = sampler.sample(n_events)
-        coords = self.npred_map.geom.pix_to_coord(coords_pix[::-1])
+        coords = self.geom.pix_to_coord(coords_pix[::-1])
 
         # TODO: pix_to_coord should return a MapCoord object
-        geom = self.npred_map.geom
-        axes_names = ["lon", "lat"] + [ax.name for ax in geom.axes]
+        axes_names = ["lon", "lat"] + [ax.name for ax in self.geom.axes]
         cdict = OrderedDict(zip(axes_names, coords))
-        cdict["energy"] *= geom.get_axis_by_name("energy").unit
+        cdict["energy"] *= self.geom.get_axis_by_name("energy").unit
 
-        return MapCoord.create(cdict, coordsys=geom.coordsys)
+        return MapCoord.create(cdict, coordsys=self.geom.coordsys)
 
-    def sample_events(self, npred_map=None, n_events=None, random_state=0):
+    def sample_events(self, n_events=None, random_state=0):
         """It converts the given sampled event list into an astropy table.
-
+        
         Parameters
         ----------
         npred_map : `~gammapy.maps.Map`
-            Predicted number of counts map.
+        Predicted number of counts map.
         n_events : int
-            Number of events to sample.
+        Number of events to sample.
         random_state : {int, 'random-seed', 'global-rng', `~numpy.random.RandomState`}
-            Defines random number generator initialisation.
-            Passed to `~gammapy.utils.random.get_random_state`.
-
+        Defines random number generator initialisation.
+        Passed to `~gammapy.utils.random.get_random_state`.
+        
         Returns
         -------
         events : `~astropy.table`
-            Sampled event list in an astropy table format.
+        Sampled event list in an astropy table format.
         """
-        coords = self.sample_position_energy(
-            npred_map=npred_map, n_events=n_events, random_state=0
-        )
+
+        coords = self.sample_coord(
+           n_events=n_events,
+           random_state=0
+           )
         skycoord = coords.skycoord
 
         events = Table()
         events["RA_TRUE"] = skycoord.icrs.ra
         events["DEC_TRUE"] = skycoord.icrs.dec
         events["ENERGY_TRUE"] = coords["energy"]
+
         return events
